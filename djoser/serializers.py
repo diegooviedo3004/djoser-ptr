@@ -203,7 +203,7 @@ class ActivationSerializer(UidAndTokenSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        if not self.user.is_active:
+        if not self.user.is_email_active:
             return attrs
         raise exceptions.PermissionDenied(self.error_messages["stale_token"])
 
