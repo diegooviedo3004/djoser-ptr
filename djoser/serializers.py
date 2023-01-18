@@ -132,10 +132,11 @@ class TokenCreateSerializer(serializers.Serializer):
 
 
 class UserFunctionsMixin:
-    def get_user(self, is_active=True):
+    def get_user(self, is_email_active=True, is_active=True):
         try:
             user = User._default_manager.get(
                 is_active=is_active,
+                is_email_active=is_email_active,
                 **{self.email_field: self.data.get(self.email_field, "")},
             )
             if user.has_usable_password():
