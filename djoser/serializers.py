@@ -137,10 +137,10 @@ class TokenCreateSerializer(serializers.Serializer):
         if self.user and self.user.is_active:
             
             # Check if has passed more than 5 days since user registration
-            if not self.user.is_email_active and (timezone.now() - self.user.date_joined) > timedelta(minutes=2):
-                return Response("Email not activated")
+            #if not self.user.is_email_active and (timezone.now() - self.user.date_joined) > timedelta(minutes=2):
+                #return Response("Email not activated")
 
-            return Response("Email not activated")
+            #return Response("Email not activated")
 
             return attrs
         

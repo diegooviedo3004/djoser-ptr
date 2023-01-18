@@ -186,6 +186,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.user
         user.is_email_active = True
+        user.intentos = 0
         user.save()
 
         signals.user_activated.send(
@@ -207,6 +208,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if not settings.SEND_ACTIVATION_EMAIL or not user:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if user.intentos == 5:
+            return Response({"error": "Too many resend_activation tries"})
+
+        user.intentos += 1
+
+        user.save()
 
         context = {"user": user}
         to = [get_user_email(user)]
