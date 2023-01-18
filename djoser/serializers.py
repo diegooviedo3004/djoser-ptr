@@ -10,8 +10,8 @@ from djoser import utils
 from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 
-
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 
 User = get_user_model()
 
@@ -133,9 +133,8 @@ class TokenCreateSerializer(serializers.Serializer):
         
         if self.user and self.user.is_active:
             
-            # Check if has passed more than 5 days since 
-            print(type(datetime.now()), type(self.user.date_joined))
-            if not self.user.is_email_active and (datetime.now() - self.user.date_joined) > timedelta(minutes=5):
+            # Check if has passed more than 5 days since user registration
+            if not self.user.is_email_active and (timezone.now() - self.user.date_joined) > timedelta(minutes=2):
                 self.fail("email_not_activated")
 
 
