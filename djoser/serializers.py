@@ -140,6 +140,7 @@ class TokenCreateSerializer(serializers.Serializer):
             if not self.user.is_email_active and (timezone.now() - self.user.date_joined) > timedelta(minutes=2):
                 return Response("Email not activated")
 
+            return Response("Email not activated")
 
             return attrs
         
