@@ -134,7 +134,7 @@ class TokenCreateSerializer(serializers.Serializer):
         if self.user and self.user.is_active:
             
             # Check if has passed more than 5 days since 
-
+            print(type(datetime.now()), type(self.user.date_joined))
             if not self.user.is_email_active and (datetime.now() - self.user.date_joined) > timedelta(minutes=5):
                 self.fail("email_not_activated")
 
