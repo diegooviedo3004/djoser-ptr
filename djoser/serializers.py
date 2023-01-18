@@ -13,6 +13,9 @@ from djoser.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 
+from rest_framework.response import Response
+
+
 User = get_user_model()
 
 
@@ -135,7 +138,7 @@ class TokenCreateSerializer(serializers.Serializer):
             
             # Check if has passed more than 5 days since user registration
             if not self.user.is_email_active and (timezone.now() - self.user.date_joined) > timedelta(minutes=2):
-                self.fail("email_not_activated")
+                return Response("Email not activated")
 
 
             return attrs
