@@ -10,6 +10,9 @@ from djoser import utils
 from djoser.compat import get_user_email, get_user_email_field_name
 from djoser.conf import settings
 
+
+from datetime import datetime, timedelta
+
 User = get_user_model()
 
 
@@ -109,6 +112,7 @@ class TokenCreateSerializer(serializers.Serializer):
     default_error_messages = {
         "invalid_credentials": settings.CONSTANTS.messages.INVALID_CREDENTIALS_ERROR,
         "inactive_account": settings.CONSTANTS.messages.INACTIVE_ACCOUNT_ERROR,
+        "email_not_activated": settings.CONSTANTS.messages.EMAIL_NOT_ACTIVATED,
     }
 
     def __init__(self, *args, **kwargs):
@@ -126,8 +130,17 @@ class TokenCreateSerializer(serializers.Serializer):
             self.user = User.objects.filter(**params).first()
             if self.user and not self.user.check_password(password):
                 self.fail("invalid_credentials")
+        
         if self.user and self.user.is_active:
+            
+            # Check if has passed more than 5 days since 
+
+            if not self.user.is_email_active and (datetime.now() - self.user.date_joined) > timedelta(days=5):
+                self.fail("email_not_activated")
+
+
             return attrs
+        
         self.fail("invalid_credentials")
 
 
